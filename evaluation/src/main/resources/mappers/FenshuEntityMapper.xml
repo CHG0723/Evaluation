@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.evaluation.mapper.FenshuEntityMapper">
+  <resultMap id="BaseResultMap" type="com.evaluation.entity.FenshuEntity">
+    <id column="fenshu_id" jdbcType="INTEGER" property="fenshuId" />
+    <result column="fenshu_fenshu" jdbcType="DOUBLE" property="fenshuFenshu" />
+    <result column="fenshu_erjizhibiao_id" jdbcType="INTEGER" property="fenshuErjizhibiaoId" />
+    <result column="fenshu_teaId" jdbcType="INTEGER" property="fenshuTeaid" />
+    <result column="fenshu_stuId" jdbcType="INTEGER" property="fenshuStuid" />
+    <result column="shijian" jdbcType="VARCHAR" property="shijian" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    fenshu_id, fenshu_fenshu, fenshu_erjizhibiao_id, fenshu_teaId, fenshu_stuId, shijian
+  </sql>
+  <select id="selectByExample" parameterType="com.evaluation.entity.FenshuEntityExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from fenshu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fenshu
+    where fenshu_id = #{fenshuId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fenshu
+    where fenshu_id = #{fenshuId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.evaluation.entity.FenshuEntityExample">
+    delete from fenshu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.evaluation.entity.FenshuEntity">
+    insert into fenshu (fenshu_id, fenshu_fenshu, fenshu_erjizhibiao_id, 
+      fenshu_teaId, fenshu_stuId, shijian
+      )
+    values (#{fenshuId,jdbcType=INTEGER}, #{fenshuFenshu,jdbcType=DOUBLE}, #{fenshuErjizhibiaoId,jdbcType=INTEGER}, 
+      #{fenshuTeaid,jdbcType=INTEGER}, #{fenshuStuid,jdbcType=INTEGER}, #{shijian,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.evaluation.entity.FenshuEntity">
+    insert into fenshu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fenshuId != null">
+        fenshu_id,
+      </if>
+      <if test="fenshuFenshu != null">
+        fenshu_fenshu,
+      </if>
+      <if test="fenshuErjizhibiaoId != null">
+        fenshu_erjizhibiao_id,
+      </if>
+      <if test="fenshuTeaid != null">
+        fenshu_teaId,
+      </if>
+      <if test="fenshuStuid != null">
+        fenshu_stuId,
+      </if>
+      <if test="shijian != null">
+        shijian,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fenshuId != null">
+        #{fenshuId,jdbcType=INTEGER},
+      </if>
+      <if test="fenshuFenshu != null">
+        #{fenshuFenshu,jdbcType=DOUBLE},
+      </if>
+      <if test="fenshuErjizhibiaoId != null">
+        #{fenshuErjizhibiaoId,jdbcType=INTEGER},
+      </if>
+      <if test="fenshuTeaid != null">
+        #{fenshuTeaid,jdbcType=INTEGER},
+      </if>
+      <if test="fenshuStuid != null">
+        #{fenshuStuid,jdbcType=INTEGER},
+      </if>
+      <if test="shijian != null">
+        #{shijian,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.evaluation.entity.FenshuEntityExample" resultType="java.lang.Long">
+    select count(*) from fenshu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update fenshu
+    <set>
+      <if test="record.fenshuId != null">
+        fenshu_id = #{record.fenshuId,jdbcType=INTEGER},
+      </if>
+      <if test="record.fenshuFenshu != null">
+        fenshu_fenshu = #{record.fenshuFenshu,jdbcType=DOUBLE},
+      </if>
+      <if test="record.fenshuErjizhibiaoId != null">
+        fenshu_erjizhibiao_id = #{record.fenshuErjizhibiaoId,jdbcType=INTEGER},
+      </if>
+      <if test="record.fenshuTeaid != null">
+        fenshu_teaId = #{record.fenshuTeaid,jdbcType=INTEGER},
+      </if>
+      <if test="record.fenshuStuid != null">
+        fenshu_stuId = #{record.fenshuStuid,jdbcType=INTEGER},
+      </if>
+      <if test="record.shijian != null">
+        shijian = #{record.shijian,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update fenshu
+    set fenshu_id = #{record.fenshuId,jdbcType=INTEGER},
+      fenshu_fenshu = #{record.fenshuFenshu,jdbcType=DOUBLE},
+      fenshu_erjizhibiao_id = #{record.fenshuErjizhibiaoId,jdbcType=INTEGER},
+      fenshu_teaId = #{record.fenshuTeaid,jdbcType=INTEGER},
+      fenshu_stuId = #{record.fenshuStuid,jdbcType=INTEGER},
+      shijian = #{record.shijian,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.evaluation.entity.FenshuEntity">
+    update fenshu
+    <set>
+      <if test="fenshuFenshu != null">
+        fenshu_fenshu = #{fenshuFenshu,jdbcType=DOUBLE},
+      </if>
+      <if test="fenshuErjizhibiaoId != null">
+        fenshu_erjizhibiao_id = #{fenshuErjizhibiaoId,jdbcType=INTEGER},
+      </if>
+      <if test="fenshuTeaid != null">
+        fenshu_teaId = #{fenshuTeaid,jdbcType=INTEGER},
+      </if>
+      <if test="fenshuStuid != null">
+        fenshu_stuId = #{fenshuStuid,jdbcType=INTEGER},
+      </if>
+      <if test="shijian != null">
+        shijian = #{shijian,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fenshu_id = #{fenshuId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.evaluation.entity.FenshuEntity">
+    update fenshu
+    set fenshu_fenshu = #{fenshuFenshu,jdbcType=DOUBLE},
+      fenshu_erjizhibiao_id = #{fenshuErjizhibiaoId,jdbcType=INTEGER},
+      fenshu_teaId = #{fenshuTeaid,jdbcType=INTEGER},
+      fenshu_stuId = #{fenshuStuid,jdbcType=INTEGER},
+      shijian = #{shijian,jdbcType=VARCHAR}
+    where fenshu_id = #{fenshuId,jdbcType=INTEGER}
+  </update>
+  <select id="selectOneByExample" parameterType="com.evaluation.entity.FenshuEntityExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from fenshu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1
+  </select>
+  <select id="selectByExamplePaging" parameterType="map" resultMap="BaseResultMap">
+    select
+    <if test="example.distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from fenshu
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+    <if test="example.orderByClause != null">
+      order by ${example.orderByClause}
+    </if>
+    limit ${offset},${limit}
+  </select>
+  <insert id="insertBatch" parameterType="com.evaluation.entity.FenshuEntity">
+    insert into fenshu (fenshu_id, 
+      fenshu_fenshu, fenshu_erjizhibiao_id, 
+      fenshu_teaId, fenshu_stuId, shijian
+      )
+    values 
+<foreach collection="list" index="index" item="item" separator="," >
+(
+<trim suffixOverrides="," >
+#{item.fenshuId,jdbcType=INTEGER}, 
+      #{item.fenshuFenshu,jdbcType=DOUBLE}, #{item.fenshuErjizhibiaoId,jdbcType=INTEGER}, 
+      #{item.fenshuTeaid,jdbcType=INTEGER}, #{item.fenshuStuid,jdbcType=INTEGER}, #{item.shijian,jdbcType=VARCHAR}
+      
+</trim>
+)</foreach>
+
+  </insert>
+</mapper>

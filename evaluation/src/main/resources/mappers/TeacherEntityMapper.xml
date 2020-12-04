@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.evaluation.mapper.TeacherEntityMapper">
+  <resultMap id="BaseResultMap" type="com.evaluation.entity.TeacherEntity">
+    <id column="tea_id" jdbcType="INTEGER" property="teaId" />
+    <result column="tea_bianhao" jdbcType="VARCHAR" property="teaBianhao" />
+    <result column="tea_realname" jdbcType="VARCHAR" property="teaRealname" />
+    <result column="tea_sex" jdbcType="VARCHAR" property="teaSex" />
+    <result column="tea_age" jdbcType="VARCHAR" property="teaAge" />
+    <result column="login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="login_pw" jdbcType="VARCHAR" property="loginPw" />
+    <result column="del" jdbcType="VARCHAR" property="del" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    tea_id, tea_bianhao, tea_realname, tea_sex, tea_age, login_name, login_pw, del
+  </sql>
+  <select id="selectByExample" parameterType="com.evaluation.entity.TeacherEntityExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from teacher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from teacher
+    where tea_id = #{teaId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from teacher
+    where tea_id = #{teaId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.evaluation.entity.TeacherEntityExample">
+    delete from teacher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.evaluation.entity.TeacherEntity">
+    insert into teacher (tea_id, tea_bianhao, tea_realname, 
+      tea_sex, tea_age, login_name, 
+      login_pw, del)
+    values (#{teaId,jdbcType=INTEGER}, #{teaBianhao,jdbcType=VARCHAR}, #{teaRealname,jdbcType=VARCHAR}, 
+      #{teaSex,jdbcType=VARCHAR}, #{teaAge,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
+      #{loginPw,jdbcType=VARCHAR}, #{del,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.evaluation.entity.TeacherEntity">
+    insert into teacher
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="teaId != null">
+        tea_id,
+      </if>
+      <if test="teaBianhao != null">
+        tea_bianhao,
+      </if>
+      <if test="teaRealname != null">
+        tea_realname,
+      </if>
+      <if test="teaSex != null">
+        tea_sex,
+      </if>
+      <if test="teaAge != null">
+        tea_age,
+      </if>
+      <if test="loginName != null">
+        login_name,
+      </if>
+      <if test="loginPw != null">
+        login_pw,
+      </if>
+      <if test="del != null">
+        del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="teaId != null">
+        #{teaId,jdbcType=INTEGER},
+      </if>
+      <if test="teaBianhao != null">
+        #{teaBianhao,jdbcType=VARCHAR},
+      </if>
+      <if test="teaRealname != null">
+        #{teaRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="teaSex != null">
+        #{teaSex,jdbcType=VARCHAR},
+      </if>
+      <if test="teaAge != null">
+        #{teaAge,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null">
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPw != null">
+        #{loginPw,jdbcType=VARCHAR},
+      </if>
+      <if test="del != null">
+        #{del,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.evaluation.entity.TeacherEntityExample" resultType="java.lang.Long">
+    select count(*) from teacher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update teacher
+    <set>
+      <if test="record.teaId != null">
+        tea_id = #{record.teaId,jdbcType=INTEGER},
+      </if>
+      <if test="record.teaBianhao != null">
+        tea_bianhao = #{record.teaBianhao,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teaRealname != null">
+        tea_realname = #{record.teaRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teaSex != null">
+        tea_sex = #{record.teaSex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teaAge != null">
+        tea_age = #{record.teaAge,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginName != null">
+        login_name = #{record.loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginPw != null">
+        login_pw = #{record.loginPw,jdbcType=VARCHAR},
+      </if>
+      <if test="record.del != null">
+        del = #{record.del,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update teacher
+    set tea_id = #{record.teaId,jdbcType=INTEGER},
+      tea_bianhao = #{record.teaBianhao,jdbcType=VARCHAR},
+      tea_realname = #{record.teaRealname,jdbcType=VARCHAR},
+      tea_sex = #{record.teaSex,jdbcType=VARCHAR},
+      tea_age = #{record.teaAge,jdbcType=VARCHAR},
+      login_name = #{record.loginName,jdbcType=VARCHAR},
+      login_pw = #{record.loginPw,jdbcType=VARCHAR},
+      del = #{record.del,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.evaluation.entity.TeacherEntity">
+    update teacher
+    <set>
+      <if test="teaBianhao != null">
+        tea_bianhao = #{teaBianhao,jdbcType=VARCHAR},
+      </if>
+      <if test="teaRealname != null">
+        tea_realname = #{teaRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="teaSex != null">
+        tea_sex = #{teaSex,jdbcType=VARCHAR},
+      </if>
+      <if test="teaAge != null">
+        tea_age = #{teaAge,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null">
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPw != null">
+        login_pw = #{loginPw,jdbcType=VARCHAR},
+      </if>
+      <if test="del != null">
+        del = #{del,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where tea_id = #{teaId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.evaluation.entity.TeacherEntity">
+    update teacher
+    set tea_bianhao = #{teaBianhao,jdbcType=VARCHAR},
+      tea_realname = #{teaRealname,jdbcType=VARCHAR},
+      tea_sex = #{teaSex,jdbcType=VARCHAR},
+      tea_age = #{teaAge,jdbcType=VARCHAR},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      login_pw = #{loginPw,jdbcType=VARCHAR},
+      del = #{del,jdbcType=VARCHAR}
+    where tea_id = #{teaId,jdbcType=INTEGER}
+  </update>
+  <select id="selectOneByExample" parameterType="com.evaluation.entity.TeacherEntityExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from teacher
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1
+  </select>
+  <select id="selectByExamplePaging" parameterType="map" resultMap="BaseResultMap">
+    select
+    <if test="example.distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from teacher
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+    <if test="example.orderByClause != null">
+      order by ${example.orderByClause}
+    </if>
+    limit ${offset},${limit}
+  </select>
+  <insert id="insertBatch" parameterType="com.evaluation.entity.TeacherEntity">
+    insert into teacher (tea_id, 
+      tea_bianhao, tea_realname, tea_sex, 
+      tea_age, login_name, login_pw, 
+      del)
+    values 
+<foreach collection="list" index="index" item="item" separator="," >
+(
+<trim suffixOverrides="," >
+#{item.teaId,jdbcType=INTEGER}, 
+      #{item.teaBianhao,jdbcType=VARCHAR}, #{item.teaRealname,jdbcType=VARCHAR}, #{item.teaSex,jdbcType=VARCHAR}, 
+      #{item.teaAge,jdbcType=VARCHAR}, #{item.loginName,jdbcType=VARCHAR}, #{item.loginPw,jdbcType=VARCHAR}, 
+      #{item.del,jdbcType=VARCHAR}
+</trim>
+)</foreach>
+
+  </insert>
+</mapper>

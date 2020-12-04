@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.evaluation.mapper.StudentEntityMapper">
+  <resultMap id="BaseResultMap" type="com.evaluation.entity.StudentEntity">
+    <id column="stu_id" jdbcType="INTEGER" property="stuId" />
+    <result column="stu_xuehao" jdbcType="VARCHAR" property="stuXuehao" />
+    <result column="stu_realname" jdbcType="VARCHAR" property="stuRealname" />
+    <result column="stu_sex" jdbcType="VARCHAR" property="stuSex" />
+    <result column="stu_age" jdbcType="VARCHAR" property="stuAge" />
+    <result column="stu_card" jdbcType="VARCHAR" property="stuCard" />
+    <result column="stu_zhengzhimianmao" jdbcType="VARCHAR" property="stuZhengzhimianmao" />
+    <result column="login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="login_pw" jdbcType="VARCHAR" property="loginPw" />
+    <result column="del" jdbcType="VARCHAR" property="del" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    stu_id, stu_xuehao, stu_realname, stu_sex, stu_age, stu_card, stu_zhengzhimianmao, 
+    login_name, login_pw, del
+  </sql>
+  <select id="selectByExample" parameterType="com.evaluation.entity.StudentEntityExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from student
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from student
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from student
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.evaluation.entity.StudentEntityExample">
+    delete from student
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.evaluation.entity.StudentEntity">
+    insert into student (stu_id, stu_xuehao, stu_realname, 
+      stu_sex, stu_age, stu_card, 
+      stu_zhengzhimianmao, login_name, login_pw, 
+      del)
+    values (#{stuId,jdbcType=INTEGER}, #{stuXuehao,jdbcType=VARCHAR}, #{stuRealname,jdbcType=VARCHAR}, 
+      #{stuSex,jdbcType=VARCHAR}, #{stuAge,jdbcType=VARCHAR}, #{stuCard,jdbcType=VARCHAR}, 
+      #{stuZhengzhimianmao,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, #{loginPw,jdbcType=VARCHAR}, 
+      #{del,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.evaluation.entity.StudentEntity">
+    insert into student
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stuId != null">
+        stu_id,
+      </if>
+      <if test="stuXuehao != null">
+        stu_xuehao,
+      </if>
+      <if test="stuRealname != null">
+        stu_realname,
+      </if>
+      <if test="stuSex != null">
+        stu_sex,
+      </if>
+      <if test="stuAge != null">
+        stu_age,
+      </if>
+      <if test="stuCard != null">
+        stu_card,
+      </if>
+      <if test="stuZhengzhimianmao != null">
+        stu_zhengzhimianmao,
+      </if>
+      <if test="loginName != null">
+        login_name,
+      </if>
+      <if test="loginPw != null">
+        login_pw,
+      </if>
+      <if test="del != null">
+        del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stuId != null">
+        #{stuId,jdbcType=INTEGER},
+      </if>
+      <if test="stuXuehao != null">
+        #{stuXuehao,jdbcType=VARCHAR},
+      </if>
+      <if test="stuRealname != null">
+        #{stuRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="stuSex != null">
+        #{stuSex,jdbcType=VARCHAR},
+      </if>
+      <if test="stuAge != null">
+        #{stuAge,jdbcType=VARCHAR},
+      </if>
+      <if test="stuCard != null">
+        #{stuCard,jdbcType=VARCHAR},
+      </if>
+      <if test="stuZhengzhimianmao != null">
+        #{stuZhengzhimianmao,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null">
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPw != null">
+        #{loginPw,jdbcType=VARCHAR},
+      </if>
+      <if test="del != null">
+        #{del,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.evaluation.entity.StudentEntityExample" resultType="java.lang.Long">
+    select count(*) from student
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update student
+    <set>
+      <if test="record.stuId != null">
+        stu_id = #{record.stuId,jdbcType=INTEGER},
+      </if>
+      <if test="record.stuXuehao != null">
+        stu_xuehao = #{record.stuXuehao,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stuRealname != null">
+        stu_realname = #{record.stuRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stuSex != null">
+        stu_sex = #{record.stuSex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stuAge != null">
+        stu_age = #{record.stuAge,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stuCard != null">
+        stu_card = #{record.stuCard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stuZhengzhimianmao != null">
+        stu_zhengzhimianmao = #{record.stuZhengzhimianmao,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginName != null">
+        login_name = #{record.loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginPw != null">
+        login_pw = #{record.loginPw,jdbcType=VARCHAR},
+      </if>
+      <if test="record.del != null">
+        del = #{record.del,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update student
+    set stu_id = #{record.stuId,jdbcType=INTEGER},
+      stu_xuehao = #{record.stuXuehao,jdbcType=VARCHAR},
+      stu_realname = #{record.stuRealname,jdbcType=VARCHAR},
+      stu_sex = #{record.stuSex,jdbcType=VARCHAR},
+      stu_age = #{record.stuAge,jdbcType=VARCHAR},
+      stu_card = #{record.stuCard,jdbcType=VARCHAR},
+      stu_zhengzhimianmao = #{record.stuZhengzhimianmao,jdbcType=VARCHAR},
+      login_name = #{record.loginName,jdbcType=VARCHAR},
+      login_pw = #{record.loginPw,jdbcType=VARCHAR},
+      del = #{record.del,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.evaluation.entity.StudentEntity">
+    update student
+    <set>
+      <if test="stuXuehao != null">
+        stu_xuehao = #{stuXuehao,jdbcType=VARCHAR},
+      </if>
+      <if test="stuRealname != null">
+        stu_realname = #{stuRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="stuSex != null">
+        stu_sex = #{stuSex,jdbcType=VARCHAR},
+      </if>
+      <if test="stuAge != null">
+        stu_age = #{stuAge,jdbcType=VARCHAR},
+      </if>
+      <if test="stuCard != null">
+        stu_card = #{stuCard,jdbcType=VARCHAR},
+      </if>
+      <if test="stuZhengzhimianmao != null">
+        stu_zhengzhimianmao = #{stuZhengzhimianmao,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null">
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPw != null">
+        login_pw = #{loginPw,jdbcType=VARCHAR},
+      </if>
+      <if test="del != null">
+        del = #{del,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.evaluation.entity.StudentEntity">
+    update student
+    set stu_xuehao = #{stuXuehao,jdbcType=VARCHAR},
+      stu_realname = #{stuRealname,jdbcType=VARCHAR},
+      stu_sex = #{stuSex,jdbcType=VARCHAR},
+      stu_age = #{stuAge,jdbcType=VARCHAR},
+      stu_card = #{stuCard,jdbcType=VARCHAR},
+      stu_zhengzhimianmao = #{stuZhengzhimianmao,jdbcType=VARCHAR},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      login_pw = #{loginPw,jdbcType=VARCHAR},
+      del = #{del,jdbcType=VARCHAR}
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </update>
+  <select id="selectOneByExample" parameterType="com.evaluation.entity.StudentEntityExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from student
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 0,1
+  </select>
+  <select id="selectByExamplePaging" parameterType="map" resultMap="BaseResultMap">
+    select
+    <if test="example.distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from student
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+    <if test="example.orderByClause != null">
+      order by ${example.orderByClause}
+    </if>
+    limit ${offset},${limit}
+  </select>
+  <insert id="insertBatch" parameterType="com.evaluation.entity.StudentEntity">
+    insert into student (stu_id, 
+      stu_xuehao, stu_realname, stu_sex, 
+      stu_age, stu_card, stu_zhengzhimianmao, 
+      login_name, login_pw, del
+      )
+    values 
+<foreach collection="list" index="index" item="item" separator="," >
+(
+<trim suffixOverrides="," >
+#{item.stuId,jdbcType=INTEGER}, 
+      #{item.stuXuehao,jdbcType=VARCHAR}, #{item.stuRealname,jdbcType=VARCHAR}, #{item.stuSex,jdbcType=VARCHAR}, 
+      #{item.stuAge,jdbcType=VARCHAR}, #{item.stuCard,jdbcType=VARCHAR}, #{item.stuZhengzhimianmao,jdbcType=VARCHAR}, 
+      #{item.loginName,jdbcType=VARCHAR}, #{item.loginPw,jdbcType=VARCHAR}, #{item.del,jdbcType=VARCHAR}
+      
+</trim>
+)</foreach>
+
+  </insert>
+</mapper>

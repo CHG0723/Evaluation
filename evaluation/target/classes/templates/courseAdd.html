@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>课程评价系统</title>
+</head>
+<link href="../static/plugin/layui/css/layui.css" rel="stylesheet"/>
+<script type="text/javascript" src="../static/plugin/layui/layui.js"></script>
+<script type="text/javascript" src="../static/js/common.js"></script>
+<body>
+<form class="layui-form layui-form-pane" action="store/updatestore" method="post">
+    <input id="id" name="id" type="hidden">
+    <div class="layui-form-item" style="margin-top: 15px;margin-left: 30px;">
+        <label class="layui-form-label">课程名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="courseName" id="courseName" lay-verify="required" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+        <label class="layui-form-label">课程绩点分</label>
+        <div class="layui-input-inline">
+            <input type="text" name="courseScore" id="courseScore" lay-verify="required" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block" align="center">
+            <button class="layui-btn" lay-submit="" lay-filter="saveOrAdd">保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+</body>
+<script type="text/javascript">
+    layui.use(['form', 'layer', 'table', 'upload'], function () {
+        var table = layui.table, $ = layui.$, form = layui.form, upload = layui.upload;
+        //编辑时候赋值
+        var urlParam = getParam('id');
+        if (!isEmpty(urlParam)) {
+            $.ajax({
+                url: "course/getCourse",
+                data: {"id": urlParam},
+                type: "POST",
+                dataType: "json",
+                success: function (msg) {
+                    console.log(msg);
+                    var json = msg;
+                    for (var key in json) {
+                        $("#" + key + "").val(json[key]);
+                    }
+                },
+                error: function (error) {
+                    layer.msg('系统异常！请联系管理员', {icon: 5});
+                }
+            });
+        }
+
+        //监听编辑或者添加
+        form.on('submit(saveOrAdd)', function (data) {
+            var url = $("#userid").val() == "" ? "course/add" : "course/update";
+            var datas = data.field;
+            console.log(datas);
+            $.ajax({
+                url: url,
+                data: JSON.stringify(datas),
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json;charset=UTF-8",
+                success: function (msg) {
+                    log(msg);
+                    if (msg === 1) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        layer.msg('修改成功...', {icon: 6});
+                        parent.layer.close(index);
+                        window.parent.location.reload();
+                    } else {
+                        layer.msg('修改失败', {icon: 5});
+                    }
+                },
+                error: function (error) {
+                    layer.msg('系统异常！请联系管理员', {icon: 5});
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+</html>

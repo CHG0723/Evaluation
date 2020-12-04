@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>课程评价系统</title>
+</head>
+<link href="../static/plugin/layui/css/layui.css" rel="stylesheet"/>
+<script type="text/javascript" src="../static/plugin/layui/layui.js"></script>
+<script type="text/javascript" src="../static/js/common.js"></script>
+<body>
+<div class="demoTable">
+    <div class="layui-form" action="">
+        <button class="layui-btn" id="add">
+            <i class="layui-icon">&#xe654;</i>添加
+        </button>
+        <div class="layui-inline">
+            <input class="layui-input" name="courseName" id="courseName" placeholder="请输入课程名称" autocomplete="off">
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+    </div>
+</div>
+<table class="layui-hide" id="test" lay-filter="table"></table>
+</body>
+<script type="text/html" id="toolBar">
+    <a class="layui-icon" style="font-size: 25px; color: #1AA094;" lay-event="edit">&#xe642;</a>
+    <a class="layui-icon" style="font-size: 25px; color: #1AA094;" lay-event="del">&#xe640;</a>
+</script>
+
+<script>
+    layui.use(['form', 'layer', 'table'], function () {
+        var table = layui.table
+            , form = layui.form, $ = layui.$;
+
+        table.render({
+            elem: '#test'  //绑定table id
+            , url: 'course/select'  //数据请求路径
+            , cellMinWidth: 80
+            , cols: [[
+                {type: 'numbers'}
+                , {field: 'id', title: 'ID'}
+                , {field: 'courseName', title: '课程名称'}
+                , {field: 'courseScore', title: '课程绩点分'}
+                , {fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#toolBar'}//一个工具栏  具体请查看layui官网
+            ]]
+            , page: true   //开启分页
+            , limit: 10   //默认十条数据一页
+            , limits: [10, 20, 30, 50]  //数据分页条
+            , id: 'testReload'
+        });
+
+        active = {
+            reload: function () {
+                var courseName = $.trim($('#courseName').val());
+
+                table.reload('testReload', {
+                    where: {
+                        courseName: courseName
+                    }
+                });
+            }
+        };
+        table.on('tool(table)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "course/delete",
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        success: function (msg) { // 返回的RequestResult的json对象
+                            if (msg == 1) {
+                                obj.del();
+                                layer.close(index);
+                            } else {
+                                layer.msg('删除失败！请重试');
+                            }
+                        },
+                    });
+                });
+                //编辑
+            } else if (obj.event === 'edit') {
+                var json = eval('(' + JSON.stringify(data) + ')');//String转json
+                layerOpen('courseAdd?id=' + json['id'], '编辑课程信息', '670px;', '200px;');
+            }
+        });
+        <!-- 查询框中查询按钮click事件 最终调用的是上面的那个active方法-->
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        $('.demoTable #add').on('click', function(){
+
+
+            layerOpen('courseAdd','添加课程信息','670px;', '200px;');
+        });
+
+    });
+</script>
+</html>

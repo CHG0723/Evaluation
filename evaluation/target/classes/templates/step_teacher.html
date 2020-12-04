@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link href="../static/plugin/layui/css/layui.css" rel="stylesheet"/>
+<link href="../static/css/step.css" rel="stylesheet"/>
+<script type="text/javascript" src="../static/plugin/layui/layui.js"></script>
+<script type="text/javascript" src="../static/plugin/mylayui/step.js"></script>
+<script type="text/javascript" src="../static/js/common.js"></script>
+<body>
+<div class="layui-step">
+    <div class="layui-step-content layui-clear">
+        <div class="layui-step-content-item">
+            1
+        </div>
+        <!--第二步-->
+        <div class="layui-step-content-item layui-step-title-item step-current">
+            <div id="table-tea" style="display: block">
+                <table class="layui-hide" id="test" lay-filter="table"></table>
+            </div>
+            <!--评价展示-->
+            <div id="table-zb">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/html" id="toolBar">
+    <a class="layui-icon" style="font-size: 25px; color: #1AA094;" lay-event="confirms">&#xe611;评价</a>
+</script>
+<script type="text/html" id="sexTpl">
+    {{#  if(d.teaSex ==0){ }}
+    {{'女'}}
+    {{#  }  else { }}
+    {{'男'}}
+    {{#  } }}
+</script>
+<script>
+    //var $;
+    //var table;
+    layui.config({
+        base: "../static/plugin/mylayui/"
+    }).use(['jquery', 'step', 'table', 'form'], function () {
+        var $ = layui.jquery;
+        var table = layui.table;
+        var step = layui.step;
+        var form = layui.form;
+        step.render({
+            elem: '.layui-step',
+            isOpenStepLevel: true
+        });
+        $(".next").on("click", function () {
+            step.next();
+        });
+        step.goStep(2);
+        var id = getParam('id');
+        table.render({
+            elem: '#test'  //绑定table id
+            , url: 'course/queryTeacherByCourseId?id=' + id  //数据请求路径
+            , cellMinWidth: 80
+            , cols: [[
+                {type: 'numbers'}
+                , {field: 'teaBianhao', title: '编号'}
+                , {field: 'teaRealname', title: '教师真实名称'}
+                , {field: 'teaSex', title: '性别', templet: '#sexTpl'}
+                , {field: 'teaAge', title: '年龄'}
+                , {field: 'loginName', title: '登录名'}
+                , {fixed: 'right', title: '操作', width: 180, align: 'center', toolbar: '#toolBar'}//一个工具栏  具体请查看layui官网
+            ]]
+            , page: true   //开启分页
+            , limit: 10   //默认十条数据一页
+            , limits: [10, 20, 30, 50]  //数据分页条
+            , id: 'testReload'
+        });
+        table.on('tool(table)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'confirms') {
+                $.post("teacher/exit?teaId=" + data.teaId, function (msg) {
+                    if (msg == true) {
+                        layer.msg('你无权评价或者已经评价过了', {icon: 5});
+                    } else {
+                        $("#table-tea").css("display", "none");
+                        $.getJSON("first/selectList", function (msg) {
+                            var html = "<form class=\"layui-form\" action=\"\"><div class=\"layui-form-item\">";
+                            for (var i in msg) {
+                                html = html + "<div class=\"layui-inline\">\n" +
+                                    "      <div class=\"layui-input-inline\">\n" +
+                                    "" + msg[i].indexname + ":<input type=\"tel\" name=\"fenshu" + i + "\" placeholder='请打分:1-100之间' lay-verify=\"required\" id='fenshu" + i + "' data-var='" + msg[i].weight + "' autocomplete=\"off\" class=\"layui-input\">" +
+                                    "      </div>\n" +
+                                    "    </div>";
+                            }
+                            html = html + "</div><div class=\"layui-form-item\" ><div class=\"layui-input-block\">\n" +
+                                "            <button class=\"layui-btn\" lay-submit=\"\" lay-filter=\"saveOrAdd\">保存</button>\n" +
+                                "        </div>\n" +
+                                "    </div></form>"
+                            $("#table-zb").html(html);
+                            form.render();
+                        });
+                    }
+                });
+            }
+        });
+
+        form.on('submit(saveOrAdd)', function (data) {
+
+            var datas = data.field;
+            var lastResult = 0;
+            for (var i in datas) {/**/
+                var a = $("#" + i).attr("data-var");
+                var b = datas[i];
+                var result = a * b;
+                lastResult = lastResult + result;
+            }
+            console.log(lastResult.toFixed(0));
+
+            $.post("pj/add?teacherId=" + id + "&lastResult=" + lastResult.toFixed(0), function (msg) {
+                log(msg);
+                debugger;
+                if (msg.success == true) {
+                    var url;
+                    log(msg.value);
+                    if (msg.value == 1) {
+                        url = "main";
+                    } else if (msg.value == 2) {
+                        url = "mainTea";
+                    } else {
+                        url = "mainStudent";
+                    }
+                    layer.msg('评价成功，正在跳转......', {icon: 6});
+                    //layer.closeAll('page');
+                    setTimeout(function () {
+                        window.parent.location.href = url;
+                    }, 2000);
+                } else {
+                    layer.msg('评价出错，请重新评价', {icon: 5});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+</html>

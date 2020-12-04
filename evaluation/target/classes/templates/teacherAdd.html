@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>课程评价系统</title>
+</head>
+<link href="../static/plugin/layui/css/layui.css" rel="stylesheet"/>
+<script type="text/javascript" src="../static/plugin/layui/layui.js"></script>
+<script type="text/javascript" src="../static/js/common.js"></script>
+<body>
+<form class="layui-form layui-form-pane" action="store/updatestore" method="post">
+    <input id="teaId" name="teaId" type="hidden">
+    <div class="layui-form-item" style="margin-top: 15px;margin-left: 30px;">
+        <label class="layui-form-label">编号</label>
+        <div class="layui-input-inline">
+            <input type="text" name="teaBianhao" id="teaBianhao" lay-verify="required" placeholder="请输入"
+                   autocomplete="off" class="layui-input">
+        </div>
+        <label class="layui-form-label">真实名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="teaRealname" id="teaRealname" lay-verify="required" placeholder="请输入"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top: 15px;margin-left: 30px;">
+        <label class="layui-form-label">性别</label>
+        <div class="layui-input-inline">
+            <select name="teaSex" id="teaSex" id="teaSex" lay-verify="">
+                <option value="0">女</option>
+                <option value="1">男</option>
+            </select>
+        </div>
+        <label class="layui-form-label">年龄</label>
+        <div class="layui-input-inline">
+            <input type="text" name="teaAge" id="teaAge" lay-verify="required" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="margin-top: 15px;margin-left: 30px;">
+        <label class="layui-form-label">登录名</label>
+        <div class="layui-input-inline">
+            <input type="text" name="loginName" id="loginName" lay-verify="required" placeholder="请输入"
+                   autocomplete="off" class="layui-input">
+        </div>
+        <label class="layui-form-label">登录密码</label>
+        <div class="layui-input-inline">
+            <input type="text" name="loginPw" id="loginPw" lay-verify="required" placeholder="请输入" autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item" style="margin-top: 15px;margin-left: 30px;">
+        <label class="layui-form-label">代课课程</label>
+        <div class="layui-input-inline" id="courseId">
+
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block" align="center">
+            <button class="layui-btn" lay-submit="" lay-filter="saveOrAdd">保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+</body>
+<script type="text/javascript">
+    layui.use(['form', 'layer', 'table', 'upload'], function () {
+        var table = layui.table, $ = layui.$, form = layui.form, upload = layui.upload;
+        //编辑时候赋值
+        var urlParam = getParam('teaId');
+        $.post("course/select", function (data) {
+            var msg=data.data;
+            log(msg);
+            var html = "";
+            for (var i in msg) {
+                html = html + "<input type=\"checkbox\" name='like' id='checkbox"+msg[i].id+"' value =\""+msg[i].id+"\"  title=\""+msg[i].courseName+"\">"
+            }
+            $("#courseId").html(html);
+            form.render();
+        });
+
+        log(urlParam)
+        if (!isEmpty(urlParam)) {
+            $.post("teacher/getTeacher", {
+                "teaId": urlParam
+            }, function (msg) {
+                var json = msg;
+                for (var key in json) {
+                    $("#" + key + "").val(json[key]);
+                }
+                var arr = json['courseIds'];
+                for ( var i = 0; i <arr.length; i++){
+                    $("#checkbox"+arr[i]+"").attr("checked", "checked");
+                }
+                form.render();
+            });
+        }
+
+        //监听编辑或者添加
+        form.on('submit(saveOrAdd)', function (data) {
+            var url = $("#teaId").val() == "" ? "teacher/add" : "teacher/update";
+            var datas = data.field;
+            var arr = new Array();
+            $("input:checkbox[name='like']:checked").each(function(i){
+                arr[i] = $(this).val();
+            });
+            datas['courseIds']=arr;
+            $.ajax({
+                url: url,
+                data: JSON.stringify(datas),
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json;charset=UTF-8",
+                success: function (msg) {
+                    if (msg === 1) {
+                        layer.msg('修改成功，正在跳转......', {icon: 6});
+                        //parent.layer.close(index);
+                        setTimeout(function () {
+                            window.parent.location.reload();
+                        }, 1000);
+
+                    } else {
+                        layer.msg('修改失败', {icon: 5});
+                    }
+                },
+                error: function (error) {
+                    layer.msg('系统异常！请联系管理员', {icon: 5});
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+</html>
